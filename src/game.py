@@ -1,14 +1,18 @@
 from engine import *
 
-# block texture atlas
-textures = { }
+from blocks import init_blocks
+from camera import Camera
+from world import Chunk
 
-def name(): "pixelcraft"
+
+camera = Camera()
+chunk = Chunk(0, 0)
+
+def name(): return "pixelcraft"
 
 def setup():
-    textures['dirt'] = load_image('tiles/dirt.png')
-    textures['grass'] = load_image('tiles/grass.png')
+    resize(1000, 800)
+    init_blocks()
 
 def draw():
-    image(textures['dirt'], 0, 0)
-    image(textures['grass'], 0, 40)
+    camera.render(chunk)

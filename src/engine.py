@@ -37,20 +37,27 @@ def run(sketch):
     # begin game loop
     glutMainLoop()
 
-def resize(width: int, height: int):
+def resize(w: int, h: int):
     """Resize the application window and set the projection
     matrix appropriately"""
     # set window size
-    glutReshapeWindow(width, height)
+    glutReshapeWindow(w, h)
 
     # reset projection matrix
     glLoadIdentity()
-    glViewport(0, 0, width, height)
+    glViewport(0, 0, w, h)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    glOrtho(0.0, width, 0.0, height, 0.0, 1.0)
+    glOrtho(0.0, w, 0.0, h, 0.0, 1.0)
     glMatrixMode (GL_MODELVIEW)
     glLoadIdentity()
+
+    # store wize
+    width.value = w
+    height.value = h
+
+def width() -> int: return width.value
+def height() -> int: return height.value
 
 class Image:
     """Wrapper over an OpenGL texture2D"""
@@ -91,6 +98,7 @@ class Image:
         self.inner = inner
         self.width = width
         self.height = height
+        self.path = path
 
 def load_image(path: str, *args) -> Image:
     """Loads an image given its path relative to the /res folder.
