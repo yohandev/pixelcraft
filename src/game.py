@@ -1,18 +1,25 @@
 from engine import *
 
-from blocks import init_blocks
 from camera import Camera
-from world import Chunk
+from world import World
+from tile import Tile
 
 
-camera = Camera()
-chunk = Chunk(0, 0)
-
-def name(): return "pixelcraft"
+camera = None
+world = None
 
 def setup():
+    global camera, world
+
+    rename('pixelcraft')
     resize(1000, 800)
-    init_blocks()
+
+    camera = Camera()
+    world = World(Tile.Registry('data/tiles.toml'))
+
+    world[0, 0] = 'grass'
 
 def draw():
-    camera.render(chunk)
+    camera.render(world)
+    camera.x += 0.01
+    camera.y += 0.005

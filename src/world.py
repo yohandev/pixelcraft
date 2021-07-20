@@ -1,20 +1,27 @@
-from blocks import *
+from tile import *
 
-class Chunk:
-    size = 32
-    area = 32 ** 2
+import numpy as np
 
-    def __init__(self, x: int, y: int):
-        self.tiles = [BlockAir()] * Chunk.area
-        self.x = x
-        self.y = y
+
+class World:
+    """A container of tile data and entites for a single dimension
+    
+    Attributes:
+        size    The numer of tiles in the x, y dimensions of the world
+    """
+    size = 6000, 800
+
+    def __init__(self, registry: Tile.Registry):
+        """Creates an empty world with default tile(id#0)"""
+        self.tiles      = np.ones(World.size, dtype=np.uint16)
+        self.registry   = registry
 
     def __getitem__(self, pos):
-        return self.tiles[pos[1] * Chunk.size + pos[0]]
+        """Get the tile at the given position: x, y"""
+        x, y = pos[0] + World.size[0] // 2, pos[1] + World.size[1] // 2
+        return self.registry[self.tiles[x, y]]
 
-    def __iter__(self):
-        for i, block in enumerate(self.tiles):
-            x = i % Chunk.size
-            y = i // Chunk.size
-
-            yield x, y, block
+    def __setitem__(self, pos, item):
+        """Set the tile at the given position: x, y"""
+        x, y = pos[0] + World.size[0] // 2, pos[1] + World.size[1] // 2
+        self.tiles[x, y] =  np.uint16(self.registry[item].id)

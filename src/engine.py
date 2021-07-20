@@ -3,6 +3,7 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 import numpy
+import toml
 import os
 
 
@@ -14,7 +15,7 @@ def run(sketch):
     # initialize GL(UT)
     glutInit()
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
-    glutCreateWindow(sketch.name())
+    glutCreateWindow("")
 
     # default size
     resize(1000, 800)
@@ -56,8 +57,20 @@ def resize(w: int, h: int):
     width.value = w
     height.value = h
 
+def rename(title: str):
+    """Rename the window with the given title"""
+    glutSetWindowTitle(title)
+
 def width() -> int: return width.value
 def height() -> int: return height.value
+
+def load_toml(path):
+    """Loads a TOML file given its path relative to /res"""
+    # absolute path
+    root = os.path.dirname(__file__)
+    path = os.path.join(root, "../res", path)
+
+    return toml.load(path)
 
 class Image:
     """Wrapper over an OpenGL texture2D"""
@@ -93,7 +106,9 @@ class Image:
         
         # load pixels in
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
-        
+        # unbind
+        glBindTexture(GL_TEXTURE_2D, 0)
+
         # save metadata in self
         self.inner = inner
         self.width = width

@@ -1,0 +1,14 @@
+[[tile]]
+name = "Air"
+texture = "air.png"
+collide = "void"
+
+[[tile]]
+name = "Dirt"
+texture = "dirt.png"
+collide = "full"
+
+[[tile]]
+name = "Grass"
+texture = "grass.png"
+collide = "full"
