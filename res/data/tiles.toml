@@ -12,3 +12,8 @@ collide = "full"
 name = "Grass"
 texture = "grass.png"
 collide = "full"
+
+[[tile]]
+name = "Stone"
+texture = "stone.png"
+collide = "full"

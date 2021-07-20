@@ -1,6 +1,7 @@
 from tile import *
 
-import numpy as np
+import numpy
+import noise
 
 
 class World:
@@ -11,9 +12,12 @@ class World:
     """
     size = 6000, 800
 
+    def min(self): return -(self.size[0] // 2), -(self.size[1] // 2)
+    def max(self): return +(self.size[0] // 2), +(self.size[1] // 2)
+
     def __init__(self, registry: Tile.Registry):
         """Creates an empty world with default tile(id#0)"""
-        self.tiles      = np.ones(World.size, dtype=np.uint16)
+        self.tiles      = numpy.zeros(World.size, dtype=numpy.uint16)
         self.registry   = registry
 
     def __getitem__(self, pos):
@@ -24,4 +28,21 @@ class World:
     def __setitem__(self, pos, item):
         """Set the tile at the given position: x, y"""
         x, y = pos[0] + World.size[0] // 2, pos[1] + World.size[1] // 2
-        self.tiles[x, y] =  np.uint16(self.registry[item].id)
+        self.tiles[x, y] = self.registry[item].id
+
+    def generate(self):
+        dirt = self.registry['dirt'].id
+        grass = self.registry['grass'].id
+        stone = self.registry['stone'].id
+
+        for x in range(self.size[0]):
+            h = 400 + int(20 * noise.pnoise1(x * 0.01) - 10)
+            
+            hs = int(h * 0.99 + (5 * noise.pnoise1(x * 0.05) - 2.5))
+            hs = min(hs, h)
+
+            for y in range(hs, h):
+                self.tiles[x, y] = dirt
+            for y in range(hs):
+                self.tiles[x, y] = stone
+            self.tiles[x, h] = grass

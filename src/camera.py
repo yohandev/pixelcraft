@@ -9,13 +9,15 @@ class Camera:
         self.y = 0
 
     def render(self, world: World):
-        min = self.x - width() // (2 * 80), self.y - height() // (2 * 80)
-        max = self.x + width() // (2 * 80), self.y + height() // (2 * 80)
+        px = 40
 
-        cx, cy = width() / 2 - 40, height() / 2 - 40
+        min = self.x - width() // (2 * px), self.y - height() // (2 * px)
+        max = self.x + width() // (2 * px), self.y + height() // (2 * px)
+
+        cx, cy = width() / 2 - (px / 2), height() / 2 - (px / 2)
 
         for x in range(int(min[0] - 2), int(max[0]) + 2):
             for y in range(int(min[1] - 2), int(max[1]) + 2):
-                image(world[x, y].texture, (x - self.x) * 80 + cx, (y - self.y) * 80 + cy, 80)
+                image(world[x, y].texture, (x - self.x) * px + cx, (y - self.y) * px + cy, px)
 
 
