@@ -8,6 +8,8 @@ from tile import Tile
 camera = None
 world = None
 
+input = [0, 0]
+
 def setup():
     global camera, world
 
@@ -20,6 +22,34 @@ def setup():
     world[0, 0] = 'grass'
 
 def draw():
+    camera.x += input[0] * 0.05
+    camera.y += input[1] * 0.05
+
     camera.render(world)
-    camera.x += 0.01
-    camera.y += 0.005
+
+
+def keydown(key):
+    global input
+
+    # arrow Keys
+    if key == 100:   # right
+        input[0] = 1
+    elif key == 101: # up
+        input[1] = 1
+    elif key == 102: # left
+        input[0] = -1
+    elif key == 103: # down
+        input[1] = -1
+
+def keyup(key):
+    global input
+
+    # arrow Keys
+    if key == 100:   # right
+        input[0] = min(0, input[0])
+    elif key == 101: # up
+        input[1] = min(0, input[1])
+    elif key == 102: # left
+        input[0] = max(0, input[0])
+    elif key == 103: # down
+        input[1] = max(0, input[1])

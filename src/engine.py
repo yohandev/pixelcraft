@@ -3,6 +3,7 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 import numpy
+import math
 import toml
 import os
 
@@ -28,10 +29,16 @@ def run(sketch):
         sketch.draw()
         # ...then swap buffers
         glutSwapBuffers()
+    def sketch_keydown(k, _x, _y):
+        sketch.keydown(k)
+    def sketch_keyup(k, _x, _y):
+        sketch.keyup(k)
 
     # set callbacks
     glutDisplayFunc(sketch_draw)
     glutIdleFunc(sketch_draw)
+    glutSpecialFunc(sketch_keydown)
+    glutSpecialUpFunc(sketch_keyup)
     # start callback
     sketch.setup()
 
