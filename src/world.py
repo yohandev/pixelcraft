@@ -38,7 +38,7 @@ class World:
         for x in range(self.size[0]):
             h = 400 + int(20 * noise.pnoise1(x * 0.01) - 10)
             
-            hs = int(h * 0.99 + (5 * noise.pnoise1(x * 0.05) - 2.5))
+            hs = int(h * 0.995 + (5 * noise.pnoise1(x * 0.05) - 2.5))
             hs = min(hs, h)
 
             for y in range(hs, h):

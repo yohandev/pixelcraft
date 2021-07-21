@@ -20,12 +20,13 @@ def run(sketch):
 
     # default size
     resize(1000, 800)
+    # enable alpha blending
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     # wrap over sketch's draw function
     def sketch_draw():
-        # clear swap buffer...
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # ...perform draw logic...
+        # perform draw logic...
         sketch.draw()
         # ...then swap buffers
         glutSwapBuffers()
@@ -78,6 +79,12 @@ def load_toml(path):
     path = os.path.join(root, "../res", path)
 
     return toml.load(path)
+
+
+def background(r: float, g: float, b: float, a: float = 1.0):
+    """Clears the screen using the given colour"""
+    glClearColor(r, g, b, a)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
 class Image:
     """Wrapper over an OpenGL texture2D"""
@@ -146,6 +153,7 @@ def image(img: Image, x: float, y: float, w: float = None, h: float = None):
     # enable textures
     if image.bound == None:
         glEnable(GL_TEXTURE_2D)
+        glColor3f(1.0, 1.0, 1.0)
     # don't rebind unnecessarily
     if image.bound is not img:
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE)
@@ -164,3 +172,27 @@ def image(img: Image, x: float, y: float, w: float = None, h: float = None):
     glVertex2f(x, y + h)
     glEnd()
 image.bound = None
+
+def fill(r: float, g: float, b: float):
+    """Sets the fill colour for subsequent calls"""
+    if image.bound != None:
+        # disable texturing
+        glBindTexture(GL_TEXTURE_2D, 0)
+        glDisable(GL_TEXTURE_2D)
+        image.bound = None
+    # set vertex colour
+    glColor3f(r, g, b)
+
+def rect(x: float, y: float, w: float, h: float = None):
+    """Draws a rectangle, or square(if argument h is omitted)
+    at the given x, y position"""
+    # optional arguments
+    h = h if h != None else w
+
+    # draw a rectangle without texture
+    glBegin(GL_QUADS)
+    glVertex2f(x, y)
+    glVertex2f(x + w, y)
+    glVertex2f(x + w, y + h)
+    glVertex2f(x, y + h)
+    glEnd()

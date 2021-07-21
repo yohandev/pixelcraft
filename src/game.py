@@ -26,6 +26,8 @@ def draw():
     camera.x += input[0] * 0.1
     camera.y += input[1] * 0.1
 
+    background(0.5, 0.6, 0.8)
+
     camera.render(world)
 
 
