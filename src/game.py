@@ -1,22 +1,26 @@
 from engine import *
 
 from camera import Camera
+from player import Player
 from world import World
 from tile import Tile
 
 
 camera = None
+player = None
 world = None
 
 input = [0, 0]
+look = [0, 0]
 
 def setup():
-    global camera, world
+    global camera, player, world
 
     rename('pixelcraft')
     resize(1000, 800)
 
     camera = Camera()
+    player = Player()
     world = World(Tile.Registry('data/tiles.toml'))
 
     world.generate()
@@ -29,6 +33,7 @@ def draw():
     background(0.5, 0.6, 0.8)
 
     camera.render(world)
+    player.render(camera.x, look)
 
 
 def keydown(key):
@@ -56,3 +61,9 @@ def keyup(key):
         input[0] = min(0, input[0])
     elif key == 103: # down
         input[1] = max(0, input[1])
+
+def mousemove(x, y):
+    global look
+
+    look[0] = x
+    look[1] = y

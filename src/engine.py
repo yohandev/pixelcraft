@@ -34,12 +34,15 @@ def run(sketch):
         sketch.keydown(k)
     def sketch_keyup(k, _x, _y):
         sketch.keyup(k)
+    def sketch_mousemove(x, y):
+        sketch.mousemove(x, height() - y)
 
     # set callbacks
     glutDisplayFunc(sketch_draw)
     glutIdleFunc(sketch_draw)
     glutSpecialFunc(sketch_keydown)
     glutSpecialUpFunc(sketch_keyup)
+    glutPassiveMotionFunc(sketch_mousemove)
     # start callback
     sketch.setup()
 
@@ -85,6 +88,12 @@ def background(r: float, g: float, b: float, a: float = 1.0):
     """Clears the screen using the given colour"""
     glClearColor(r, g, b, a)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+def pushMatrix(): glPushMatrix()
+def popMatrix(): glPopMatrix()
+def translate(x: float, y: float): glTranslatef(x, y, 0)
+def rotate(deg: float): glRotatef(deg, 0, 0, 1)
+def scale(x: float, y: float): glScalef(x, y, 1)
 
 class Image:
     """Wrapper over an OpenGL texture2D"""
