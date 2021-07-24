@@ -32,8 +32,13 @@ def draw():
 
     background(0.5, 0.6, 0.8)
 
+    if input[0] == 0:
+        player.state = Player.State.IDLE
+    else:
+        player.state = Player.State.WALKING
+
     camera.render(world)
-    player.render(camera.x, look)
+    player.render(look)
 
 
 def keydown(key):

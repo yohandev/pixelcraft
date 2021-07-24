@@ -1,11 +1,20 @@
 from engine import *
 
+
 class Player:
+    class State(enum.Flag):
+        IDLE = enum.auto()
+        WALKING = enum.auto()
+        ATTACKING = enum.auto()
+
     def __init__(self):
         self.x = width() / 2
         self.y = height() / 2
 
-    def render(self, frame: float, look: list):
+        self.state = Player.State.IDLE
+        self.frame = 0
+
+    def render(self, look: list):
         img = Player.render.textures
 
         if len(img) == 0:
@@ -40,16 +49,22 @@ class Player:
                 rotate(-deg + 180)
             else:
                 rotate(deg)
-            print(deg)
             translate(-img['head'].width / 2, 0)
             image(img['head'], 0, 0)
             popMatrix()
 
-        leg(self.x, self.y, 45 * math.sin(frame * 1.5))
-        leg(self.x, self.y, 45 * math.sin(math.pi + frame * 1.5))
-        arm(self.x, self.y, 45 * math.sin(math.pi + frame * 1.5))
+        if self.state & Player.State.WALKING:
+            self.frame += 0.15
+        elif self.state & Player.State.IDLE:
+            self.frame %= math.pi
+            self.frame += (math.pi - self.frame) * 0.2
+
+        leg(self.x, self.y, 45 * math.sin(self.frame))
+        leg(self.x, self.y, 45 * math.sin(math.pi + self.frame))
+        arm(self.x, self.y, 45 * math.sin(math.pi + self.frame))
         body(self.x, self.y)
-        arm(self.x, self.y, 45 * math.sin(frame * 1.5))
+        arm(self.x, self.y, 45 * math.sin(self.frame))
         head(self.x, self.y, look[0], look[1])
+
 
 Player.render.textures = {}

@@ -1,6 +1,5 @@
 from engine import *
 
-from enum import Enum
 
 class Tile:
     """Data about a type of tile"""
@@ -18,7 +17,7 @@ class Tile:
             # get by numeric ID
             else: return self.tiles[key]
 
-    class Collider(Enum):
+    class Collider(enum.Enum):
         """Collision behaviours for a tile"""
         VOID = 0
         FULL = 1
