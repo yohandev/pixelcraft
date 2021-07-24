@@ -13,6 +13,7 @@ class Player:
 
         self.state = Player.State.IDLE
         self.frame = 0
+        self.frame2 = 0 # for swinging arm
 
     def render(self, look: list):
         img = Player.render.textures
@@ -39,9 +40,7 @@ class Player:
             translate(-img['arm'].width / 2, -img['arm'].height)
             image(img['arm'], 0, 0)
             popMatrix()
-        def head(x: float, y: float, mx: float, my: float):            
-            deg = math.degrees(math.atan2(my - (y + img['body'].height), mx - x))
-            
+        def head(x: float, y: float, deg: float):                        
             pushMatrix()
             translate(x, y + img['body'].height)
             if abs(deg) > 90:
@@ -59,12 +58,24 @@ class Player:
             self.frame %= math.pi
             self.frame += (math.pi - self.frame) * 0.2
 
+        # head angle
+        rad = math.atan2(look[1] - (self.y + img['body'].height), look[0] - self.x)
+        deg = math.degrees(rad)
+
+        arms = [45 * math.sin(self.frame), 45 * math.sin(-self.frame)]
+        if self.state & Player.State.ATTACKING:
+            self.frame2 += 0.6
+            # swinging arm
+            arms[0] = 5 * math.sin(self.frame2) + deg + 90
+            # walking arm moves a bit less
+            arms[1] *= 0.2
+
         leg(self.x, self.y, 45 * math.sin(self.frame))
         leg(self.x, self.y, 45 * math.sin(math.pi + self.frame))
-        arm(self.x, self.y, 45 * math.sin(math.pi + self.frame))
+        arm(self.x, self.y, arms[1])
         body(self.x, self.y)
-        arm(self.x, self.y, 45 * math.sin(self.frame))
-        head(self.x, self.y, look[0], look[1])
+        arm(self.x, self.y, arms[0])
+        head(self.x, self.y, deg)
 
 
 Player.render.textures = {}

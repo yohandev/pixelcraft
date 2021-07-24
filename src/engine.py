@@ -37,6 +37,11 @@ def run(sketch):
         sketch.keyup(k)
     def sketch_mousemove(x, y):
         sketch.mousemove(x, height() - y)
+    def sketch_mouseclick(_, down, x, y):
+        if down: sketch.mouseup(x, height() - y)
+        else: sketch.mousedown(x, height() - y)
+    def sketch_mousedrag(x, y):
+        sketch.mousedrag(x, height() - y)
 
     # set callbacks
     glutDisplayFunc(sketch_draw)
@@ -44,6 +49,8 @@ def run(sketch):
     glutSpecialFunc(sketch_keydown)
     glutSpecialUpFunc(sketch_keyup)
     glutPassiveMotionFunc(sketch_mousemove)
+    glutMouseFunc(sketch_mouseclick)
+    glutMotionFunc(sketch_mousedrag)
     # start callback
     sketch.setup()
 

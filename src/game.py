@@ -33,17 +33,17 @@ def draw():
     background(0.5, 0.6, 0.8)
 
     if input[0] == 0:
-        player.state = Player.State.IDLE
+        player.state &= ~Player.State.WALKING
+        player.state |= Player.State.IDLE
     else:
-        player.state = Player.State.WALKING
+        player.state &= ~Player.State.IDLE
+        player.state |= Player.State.WALKING
 
     camera.render(world)
     player.render(look)
 
 
 def keydown(key):
-    global input
-
     # arrow Keys
     if key == 100:   # right
         input[0] = -1
@@ -55,8 +55,6 @@ def keydown(key):
         input[1] = -1
 
 def keyup(key):
-    global input
-
     # arrow Keys
     if key == 100:   # right
         input[0] = max(0, input[0])
@@ -67,8 +65,16 @@ def keyup(key):
     elif key == 103: # down
         input[1] = max(0, input[1])
 
-def mousemove(x, y):
-    global look
+def mousedown(x, y):
+    look[0], look[1] = x, y
+    player.state |= Player.State.ATTACKING
 
-    look[0] = x
-    look[1] = y
+def mouseup(x, y):
+    look[0], look[1] = x, y
+    player.state &= ~Player.State.ATTACKING
+
+def mousemove(x, y):
+    look[0], look[1] = x, y
+
+def mousedrag(x, y):
+    look[0], look[1] = x, y
