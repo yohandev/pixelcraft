@@ -26,8 +26,8 @@ def setup():
     world.generate()
 
 def draw():
-    camera.x += input[0] * 0.1
-    camera.y += input[1] * 0.1
+    player.x += input[0] * 0.1
+    player.y += input[1] * 0.1
 
     background(0.5, 0.6, 0.8)
 
@@ -46,7 +46,13 @@ def draw():
 
     camera.x, camera.y = player.x, player.y
 
-    camera.render(world)
+    camera.push_view()
+
+    for block in camera.visible(world):
+        block.draw()
+        
+    camera.pop_view()
+
     player.render(width() / 2, height() / 2, look[0], look[1])
 
 

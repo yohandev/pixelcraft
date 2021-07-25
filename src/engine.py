@@ -97,8 +97,8 @@ def background(r: float, g: float, b: float, a: float = 1.0):
     glClearColor(r, g, b, a)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-def pushMatrix(): glPushMatrix()
-def popMatrix(): glPopMatrix()
+def push_matrix(): glPushMatrix()
+def pop_matrix(): glPopMatrix()
 def translate(x: float, y: float): glTranslatef(x, y, 0)
 def rotate(deg: float): glRotatef(deg, 0, 0, 1)
 def scale(x: float, y: float): glScalef(x, y, 1)

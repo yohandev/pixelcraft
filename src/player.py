@@ -28,23 +28,23 @@ class Player:
             img['head'] = load_image('textures/player/head.png')
         
         def leg(x: float, y: float, deg: float):
-            pushMatrix()
+            push_matrix()
             translate(x, y)
             rotate(deg)
             translate(-img['leg'].width / 2, -img['leg'].height)
             image(img['leg'], 0, 0)
-            popMatrix()
+            pop_matrix()
         def body(x: float, y: float):
             image(img['body'], x - img['body'].width / 2, y)
         def arm(x: float, y: float, deg: float):
-            pushMatrix()
+            push_matrix()
             translate(x, y + img['body'].height)
             rotate(deg)
             translate(-img['arm'].width / 2, -img['arm'].height)
             image(img['arm'], 0, 0)
-            popMatrix()
+            pop_matrix()
         def head(x: float, y: float, deg: float):                        
-            pushMatrix()
+            push_matrix()
             translate(x, y + img['body'].height)
             if abs(deg) > 90:
                 scale(-1, 1)
@@ -53,7 +53,7 @@ class Player:
                 rotate(deg)
             translate(-img['head'].width / 2, 0)
             image(img['head'], 0, 0)
-            popMatrix()
+            pop_matrix()
 
         if self.state & Player.State.WALKING:
             self.frame += 0.15

@@ -5,6 +5,9 @@ from physics import Aabb
 class Tile:
     """Data about a type of tile"""
 
+    # The size, in pixels, of a single tile. Size in world units is 1x1
+    SIZE = 40
+
     class Registry:
         """A registry of tile data"""
         def __init__(self, tiledata: str):
@@ -24,6 +27,17 @@ class Tile:
         FULL = 1
         HALF_TOP = 2
         HALF_BTM = 3
+
+    class Ref:
+        """A reference to a specific tile, containing its metadata and position"""
+        def __init__(self, tile, x: int, y: int):
+            self.tile = tile
+            self.x = x
+            self.y = y
+        
+        def draw(self):
+            """Renders self in global screen coordinates"""
+            image(self.tile.texture, self.x * Tile.SIZE, self.y * Tile.SIZE, Tile.SIZE)
 
     def __init__(self, toml: dict, id: int):
         # -- required fields --
