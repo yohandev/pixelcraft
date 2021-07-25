@@ -1,4 +1,5 @@
 from engine import *
+from physics import Aabb
 
 
 class Tile:
@@ -40,3 +41,9 @@ class Tile:
         self.texture = texture
         self.collide = collide
         self.id      = id
+
+    def aabb(self, x: float, y: float):
+        if self.collide == Tile.Collider.FULL:
+            Aabb(x, y, 1, 1)
+        elif self.collide == Tile.Collider.VOID:
+            Aabb(x, y, 0, 0)

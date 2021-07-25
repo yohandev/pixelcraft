@@ -24,13 +24,18 @@ def setup():
     world = World(Tile.Registry('data/tiles.toml'))
 
     world.generate()
-    world[0, 0] = 'grass'
 
 def draw():
     camera.x += input[0] * 0.1
     camera.y += input[1] * 0.1
 
     background(0.5, 0.6, 0.8)
+
+    # gravity
+    # player.y -= 0.5
+    # below = round(player.x), math.floor(player.y) - 1
+    # if player.aabb().intersects(world[below].aabb(below[0], below[1])):
+    #     player.y = below[1] + 2
 
     if input[0] == 0:
         player.state &= ~Player.State.WALKING
@@ -39,8 +44,10 @@ def draw():
         player.state &= ~Player.State.IDLE
         player.state |= Player.State.WALKING
 
+    camera.x, camera.y = player.x, player.y
+
     camera.render(world)
-    player.render(look)
+    player.render(width() / 2, height() / 2, look[0], look[1])
 
 
 def keydown(key):

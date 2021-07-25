@@ -20,4 +20,3 @@ class Camera:
             for y in range(int(min[1] - 2), int(max[1]) + 2):
                 image(world[x, y].texture, (x - self.x) * px + cx, (y - self.y) * px + cy, px)
 
-
