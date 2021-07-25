@@ -37,7 +37,7 @@ class Tile:
         
         def draw(self):
             """Renders self in global screen coordinates"""
-            image(self.tile.texture, self.x * Tile.SIZE, self.y * Tile.SIZE, Tile.SIZE)
+            image(self.tile.texture, self.x, self.y, 1)
 
     def __init__(self, toml: dict, id: int):
         # -- required fields --

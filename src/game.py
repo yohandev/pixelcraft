@@ -1,7 +1,8 @@
 from engine import *
 
 from camera import Camera
-from player import Player
+from entity import Player
+# from player import Player
 from world import World
 from tile import Tile
 
@@ -11,7 +12,9 @@ player = None
 world = None
 
 input = [0, 0]
-look = [0, 0]
+mouse = [0, 0]
+
+frame = 0
 
 def setup():
     global camera, player, world
@@ -26,6 +29,8 @@ def setup():
     world.generate()
 
 def draw():
+    global frame
+
     player.x += input[0] * 0.1
     player.y += input[1] * 0.1
 
@@ -37,24 +42,29 @@ def draw():
     # if player.aabb().intersects(world[below].aabb(below[0], below[1])):
     #     player.y = below[1] + 2
 
-    if input[0] == 0:
-        player.state &= ~Player.State.WALKING
-        player.state |= Player.State.IDLE
-    else:
-        player.state &= ~Player.State.IDLE
-        player.state |= Player.State.WALKING
+    # if input[0] == 0:
+    #     player.state &= ~Player.State.WALKING
+    #     player.state |= Player.State.IDLE
+    # else:
+    #     player.state &= ~Player.State.IDLE
+    #     player.state |= Player.State.WALKING
 
     camera.x, camera.y = player.x, player.y
 
+    # -- begin render --
     camera.push_view()
 
     for block in camera.visible(world):
         block.draw()
-        
+    
+    player.draw(frame)
+    
     camera.pop_view()
+    # -- end render --
 
-    player.render(width() / 2, height() / 2, look[0], look[1])
-
+    # player.render(width() / 2, height() / 2, look[0], look[1])
+    frame += 0.15
+    player.facing = camera.screen_to_world(mouse[0], mouse[1])
 
 def keydown(key):
     # arrow Keys
@@ -79,15 +89,15 @@ def keyup(key):
         input[1] = max(0, input[1])
 
 def mousedown(x, y):
-    look[0], look[1] = x, y
-    player.state |= Player.State.ATTACKING
+    mouse[0], mouse[1] = x, y
+    # player.state |= Player.State.ATTACKING
 
 def mouseup(x, y):
-    look[0], look[1] = x, y
-    player.state &= ~Player.State.ATTACKING
+    mouse[0], mouse[1] = x, y
+    # player.state &= ~Player.State.ATTACKING
 
 def mousemove(x, y):
-    look[0], look[1] = x, y
+    mouse[0], mouse[1] = x, y
 
 def mousedrag(x, y):
-    look[0], look[1] = x, y
+    mouse[0], mouse[1] = x, y

@@ -1,3 +1,4 @@
+from typing import Tuple
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -145,6 +146,11 @@ class Image:
         self.width = width
         self.height = height
         self.path = path
+    
+    @property
+    def w(self): return self.width
+    @property
+    def h(self): return self.height
 
 def load_image(path: str, *args) -> Image:
     """Loads an image given its path relative to the /res folder.
@@ -158,7 +164,20 @@ def load_image(path: str, *args) -> Image:
 
     return Image(path, args)
 
-def image(img: Image, x: float, y: float, w: float = None, h: float = None):
+def image(
+    # source image
+    img: Image,
+    # position of bottom left corner
+    x: float = 0, y: float = 0,
+    # width, height transformation
+    w: float = None, h: float = None,
+    # relative re-scaling, default (1, 1)
+    scaling: Tuple[float, float] = None,
+    # pivot, from default (0, 0) to (1, 1)
+    pivot: Tuple[float, float] = None,
+    # rotation about pivot, in degrees
+    angle: float = None,
+):
     """Draws the given image at the given position. If both width and
     height arguments are ommited, the image's original size is used.
     If only height is ommited, image aspect ratio is preserved to match
@@ -177,6 +196,21 @@ def image(img: Image, x: float, y: float, w: float = None, h: float = None):
         glBindTexture(GL_TEXTURE_2D, img.inner)
         image.bound = img
     
+    # has model matrix?
+    has_model = pivot or angle or scaling
+
+    # push transformations
+    if has_model:
+        push_matrix()
+        # translation must be done after, now
+        translate(x, y)
+        # place quad vertices at origin
+        x, y = 0, 0
+        # argument transformations
+        if scaling: scale(scaling[0], scaling[1])
+        if angle: rotate(angle)        
+        if pivot: translate(-pivot[0] * w, -pivot[1] * h)
+
     # draw a rectangle with texture
     glBegin(GL_QUADS)
     glTexCoord2f(0, 1)
@@ -188,6 +222,9 @@ def image(img: Image, x: float, y: float, w: float = None, h: float = None):
     glTexCoord2f(0, 0)
     glVertex2f(x, y + h)
     glEnd()
+
+    # pop transformations
+    if has_model: pop_matrix()
 image.bound = None
 
 def fill(r: float, g: float, b: float):

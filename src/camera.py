@@ -47,6 +47,8 @@ class Camera:
         dx, dy = self.world_to_screen(0, 0)
         # translate very successive draw calls
         translate(dx, dy)
+        # scale everything such that draw calls are directly in world coordinates
+        scale(Tile.SIZE, Tile.SIZE)
 
     def pop_view(self):
         """Pop the view matrix for this camera"""

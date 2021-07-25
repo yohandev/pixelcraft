@@ -1,8 +1,10 @@
 from engine import *
+
 from physics import Aabb
+from entity import Entity
 
 
-class Player:
+class Player(Entity):
     class State(enum.Flag):
         IDLE = enum.auto()
         WALKING = enum.auto()
