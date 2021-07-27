@@ -49,6 +49,9 @@ class Tile:
                 return Aabb(self.x + 0.5, self.y + 0.25, 1, 0.5)
             elif self.tile.collide == Tile.Collider.HALF_TOP:
                 return Aabb(self.x + 0.5, self.y + 0.75, 1, 0.5)
+        def __eq__(self, o: object) -> bool:
+            if isinstance(o, Tile.Ref): return o is self
+            else: return self.tile == o
 
     def __init__(self, toml: dict, id: int):
         # -- required fields --
@@ -66,3 +69,10 @@ class Tile:
         self.texture = texture
         self.collide = collide
         self.id      = id
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, Tile): return self.id == o.id
+        elif isinstance(o, int): return self.id == o
+        elif isinstance(o, str):
+            a, b = (n.replace(' ', '_').lower() for n in (self.name, o))
+            return a == b
+        else: return False

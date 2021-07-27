@@ -33,7 +33,7 @@ def draw():
     player.facing = camera.screen_to_world(mouse[0], mouse[1])
 
     # damped follow player
-    camera.x += (player.x - camera.x) * 0.15
+    camera.x += (player.x - camera.x) * 0.10
     camera.y += (player.y - camera.y) * 0.05
 
     # physics
@@ -41,29 +41,29 @@ def draw():
 
     # blocks to left and right of player
     left = [
-        world[math.floor(player.x - 1), math.floor(player.y)],
-        world[math.floor(player.x - 1), math.floor(player.y + 1)]
+        world[floor(player.x - 1), floor(player.y)],
+        world[floor(player.x - 1), floor(player.y + 1)]
     ]
     right = [
-        world[math.floor(player.x + 1), math.floor(player.y)],
-        world[math.floor(player.x + 1), math.floor(player.y + 1)]
+        world[floor(player.x + 1), floor(player.y)],
+        world[floor(player.x + 1), floor(player.y + 1)]
     ]
     # hit blocks?
     if True in (block.aabb().intersects(player.aabb()) for block in left):
         # snap
-        player.x = math.floor(player.x - 1) + 1.2
+        player.x = floor(player.x - 1) + 1.2
         if input[0] > 0:
             player.x += input[0] * 0.1
     elif True in (block.aabb().intersects(player.aabb()) for block in right):
         # snap
-        player.x = math.floor(player.x + 1) - 0.2
+        player.x = floor(player.x + 1) - 0.2
         if input[0] < 0:
             player.x += input[0] * 0.1
     else:
         player.x += input[0] * 0.1
 
     # block below player
-    below = world[math.floor(player.x), math.floor(player.y - 0.75)]
+    below = world[floor(player.x), floor(player.y - 0.75)]
     # is grounded?
     if below.aabb().intersects(player.aabb()):
         # snap to ground
@@ -113,6 +113,13 @@ def keyup(key):
 def mousedown(x, y):
     mouse[0], mouse[1] = x, y
     player.swinging = True
+
+    # building
+    mx, my = (floor(n) for n in camera.screen_to_world(mouse[0], mouse[1]))
+    if world[mx, my] == 'air':
+        world[mx, my] = 'stone'
+    else:
+        world[mx, my] = 'air'
 
 def mouseup(x, y):
     mouse[0], mouse[1] = x, y
