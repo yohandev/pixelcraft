@@ -30,6 +30,7 @@ def run(sketch):
     def sketch_draw():
         # perform draw logic...
         sketch.draw()
+        frame.value += 1
         # ...then swap buffers
         glutSwapBuffers()
     def sketch_keydown(k, _x, _y):
@@ -52,9 +53,12 @@ def run(sketch):
     glutPassiveMotionFunc(sketch_mousemove)
     glutMouseFunc(sketch_mouseclick)
     glutMotionFunc(sketch_mousedrag)
+    
+    # first frame
+    frame.value = 0
+
     # start callback
     sketch.setup()
-
     # begin game loop
     glutMainLoop()
 
@@ -83,6 +87,7 @@ def rename(title: str):
 
 def width() -> int: return width.value
 def height() -> int: return height.value
+def frame() -> int: return frame.value
 
 def load_toml(path):
     """Loads a TOML file given its path relative to /res"""

@@ -14,7 +14,6 @@ world = None
 input = [0, 0]
 mouse = [0, 0]
 
-frame = 0
 
 def setup():
     global camera, player, world
@@ -29,10 +28,9 @@ def setup():
     world.generate()
 
 def draw():
-    global frame
-
     player.x += input[0] * 0.1
     player.y += input[1] * 0.1
+    player.walking = input[0] != 0
 
     background(0.5, 0.6, 0.8)
 
@@ -57,13 +55,12 @@ def draw():
     for block in camera.visible(world):
         block.draw()
     
-    player.draw(frame)
+    player.draw()
     
     camera.pop_view()
     # -- end render --
 
     # player.render(width() / 2, height() / 2, look[0], look[1])
-    frame += 0.15
     player.facing = camera.screen_to_world(mouse[0], mouse[1])
 
 def keydown(key):
@@ -90,11 +87,11 @@ def keyup(key):
 
 def mousedown(x, y):
     mouse[0], mouse[1] = x, y
-    # player.state |= Player.State.ATTACKING
+    player.swinging = True
 
 def mouseup(x, y):
     mouse[0], mouse[1] = x, y
-    # player.state &= ~Player.State.ATTACKING
+    player.swinging = False
 
 def mousemove(x, y):
     mouse[0], mouse[1] = x, y
