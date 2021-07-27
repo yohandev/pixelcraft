@@ -1,6 +1,7 @@
 from engine import *
 from util import *
 
+from physics import Aabb
 from tile import Tile
 
 
@@ -9,6 +10,9 @@ class Entity:
     def __init__(self):
         self.x = 0
         self.y = 0
+
+        # downward velocity
+        self.vel = 0
 
         # walking?
         self.walking = False
@@ -19,6 +23,10 @@ class Entity:
         """Draws this entity at its position, given its frame in the walk cycle"""
         # increment walkcycle frame
         self.frame += 0.15 if self.walking else (math.pi - (self.frame % math.pi)) * 0.2
+    
+    def aabb(self) -> Aabb:
+        """Get this entity's bounding box at its current position"""
+        pass
 
 class Player(Entity):
     def __init__(self):
@@ -78,3 +86,6 @@ class Player(Entity):
         image(img['arm'], y = img['body'].h, pivot = (0.5, 1), angle = arm_l)
 
         pop_matrix()
+    
+    def aabb(self) -> Aabb:
+        return Aabb(self.x, self.y + 0.25, 0.5, 2)

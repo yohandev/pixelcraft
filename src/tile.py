@@ -39,6 +39,17 @@ class Tile:
             """Renders self in global screen coordinates"""
             image(self.tile.texture, self.x, self.y, 1)
 
+        def aabb(self):
+            """Get this block's bounding box"""
+            if self.tile.collide == Tile.Collider.FULL:
+                return Aabb(self.x + 0.5, self.y + 0.5, 1, 1)
+            elif self.tile.collide == Tile.Collider.VOID:
+                return Aabb(self.x + 0.5, self.y + 0.5, 0, 0)
+            elif self.tile.collide == Tile.Collider.HALF_BTM:
+                return Aabb(self.x + 0.5, self.y + 0.25, 1, 0.5)
+            elif self.tile.collide == Tile.Collider.HALF_TOP:
+                return Aabb(self.x + 0.5, self.y + 0.75, 1, 0.5)
+
     def __init__(self, toml: dict, id: int):
         # -- required fields --
         name    = toml['name']
@@ -55,9 +66,3 @@ class Tile:
         self.texture = texture
         self.collide = collide
         self.id      = id
-
-    def aabb(self, x: float, y: float):
-        if self.collide == Tile.Collider.FULL:
-            Aabb(x, y, 1, 1)
-        elif self.collide == Tile.Collider.VOID:
-            Aabb(x, y, 0, 0)

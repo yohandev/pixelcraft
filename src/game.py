@@ -29,27 +29,32 @@ def setup():
 
 def draw():
     player.x += input[0] * 0.1
-    player.y += input[1] * 0.1
     player.walking = input[0] != 0
+    player.facing = camera.screen_to_world(mouse[0], mouse[1])
 
-    background(0.5, 0.6, 0.8)
+    # damped follow player
+    camera.x += (player.x - camera.x) * 0.75
+    camera.y += (player.y - camera.y) * 0.05
 
-    # gravity
-    # player.y -= 0.5
-    # below = round(player.x), math.floor(player.y) - 1
-    # if player.aabb().intersects(world[below].aabb(below[0], below[1])):
-    #     player.y = below[1] + 2
+    # physics
+    player.y += player.vel
 
-    # if input[0] == 0:
-    #     player.state &= ~Player.State.WALKING
-    #     player.state |= Player.State.IDLE
-    # else:
-    #     player.state &= ~Player.State.IDLE
-    #     player.state |= Player.State.WALKING
-
-    camera.x, camera.y = player.x, player.y
+    # block below player
+    below = world[math.floor(player.x), math.floor(player.y - 0.75)]
+    # is grounded?
+    if below.aabb().intersects(player.aabb()):
+        # snap to ground
+        player.y = below.y + 1 + 0.75
+        player.vel = 0
+        # jump
+        if input[1] == 1:
+            player.vel = 0.325
+    else:
+        # gravity
+        player.vel -= 0.025
 
     # -- begin render --
+    background(0.5, 0.6, 0.8)
     camera.push_view()
 
     for block in camera.visible(world):
@@ -59,9 +64,6 @@ def draw():
     
     camera.pop_view()
     # -- end render --
-
-    # player.render(width() / 2, height() / 2, look[0], look[1])
-    player.facing = camera.screen_to_world(mouse[0], mouse[1])
 
 def keydown(key):
     # arrow Keys
