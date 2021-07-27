@@ -1,3 +1,4 @@
+from math import floor
 from engine import *
 
 from camera import Camera
@@ -28,23 +29,45 @@ def setup():
     world.generate()
 
 def draw():
-    player.x += input[0] * 0.1
     player.walking = input[0] != 0
     player.facing = camera.screen_to_world(mouse[0], mouse[1])
 
     # damped follow player
-    camera.x += (player.x - camera.x) * 0.75
+    camera.x += (player.x - camera.x) * 0.15
     camera.y += (player.y - camera.y) * 0.05
 
     # physics
     player.y += player.vel
+
+    # blocks to left and right of player
+    left = [
+        world[math.floor(player.x - 1), math.floor(player.y)],
+        world[math.floor(player.x - 1), math.floor(player.y + 1)]
+    ]
+    right = [
+        world[math.floor(player.x + 1), math.floor(player.y)],
+        world[math.floor(player.x + 1), math.floor(player.y + 1)]
+    ]
+    # hit blocks?
+    if True in (block.aabb().intersects(player.aabb()) for block in left):
+        # snap
+        player.x = math.floor(player.x - 1) + 1.2
+        if input[0] > 0:
+            player.x += input[0] * 0.1
+    elif True in (block.aabb().intersects(player.aabb()) for block in right):
+        # snap
+        player.x = math.floor(player.x + 1) - 0.2
+        if input[0] < 0:
+            player.x += input[0] * 0.1
+    else:
+        player.x += input[0] * 0.1
 
     # block below player
     below = world[math.floor(player.x), math.floor(player.y - 0.75)]
     # is grounded?
     if below.aabb().intersects(player.aabb()):
         # snap to ground
-        player.y = below.y + 1 + 0.75
+        player.y = below.y + 1 + 0.65
         player.vel = 0
         # jump
         if input[1] == 1:
