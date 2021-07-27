@@ -1,9 +1,7 @@
-from math import floor
 from engine import *
 
 from camera import Camera
 from entity import Player
-# from player import Player
 from world import World
 from tile import Tile
 
@@ -41,29 +39,29 @@ def draw():
 
     # blocks to left and right of player
     left = [
-        world[floor(player.x - 1), floor(player.y)],
-        world[floor(player.x - 1), floor(player.y + 1)]
+        world[math.floor(player.x - 1), math.floor(player.y)],
+        world[math.floor(player.x - 1), math.floor(player.y + 1)]
     ]
     right = [
-        world[floor(player.x + 1), floor(player.y)],
-        world[floor(player.x + 1), floor(player.y + 1)]
+        world[math.floor(player.x + 1), math.floor(player.y)],
+        world[math.floor(player.x + 1), math.floor(player.y + 1)]
     ]
     # hit blocks?
     if True in (block.aabb().intersects(player.aabb()) for block in left):
         # snap
-        player.x = floor(player.x - 1) + 1.2
+        player.x = math.floor(player.x - 1) + 1.2
         if input[0] > 0:
             player.x += input[0] * 0.1
     elif True in (block.aabb().intersects(player.aabb()) for block in right):
         # snap
-        player.x = floor(player.x + 1) - 0.2
+        player.x = math.floor(player.x + 1) - 0.2
         if input[0] < 0:
             player.x += input[0] * 0.1
     else:
         player.x += input[0] * 0.1
 
     # block below player
-    below = world[floor(player.x), floor(player.y - 0.75)]
+    below = world[math.floor(player.x), math.floor(player.y - 0.75)]
     # is grounded?
     if below.aabb().intersects(player.aabb()):
         # snap to ground
@@ -115,7 +113,7 @@ def mousedown(x, y):
     player.swinging = True
 
     # building
-    mx, my = (floor(n) for n in camera.screen_to_world(mouse[0], mouse[1]))
+    mx, my = (math.floor(n) for n in camera.screen_to_world(mouse[0], mouse[1]))
     if world[mx, my] == 'air':
         world[mx, my] = 'stone'
     else:
