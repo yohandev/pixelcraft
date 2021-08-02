@@ -46,13 +46,16 @@ def draw():
         world[math.floor(player.x + 1), math.floor(player.y)],
         world[math.floor(player.x + 1), math.floor(player.y + 1)]
     ]
+    
     # hit blocks?
-    if True in (block.aabb().intersects(player.aabb()) for block in left):
+    if left[0].aabb().intersects(player.aabb()) \
+    or left[1].aabb().intersects(player.aabb()):
         # snap
         player.x = math.floor(player.x - 1) + 1.2
         if input[0] > 0:
             player.x += input[0] * 0.1
-    elif True in (block.aabb().intersects(player.aabb()) for block in right):
+    if right[0].aabb().intersects(player.aabb()) \
+    or right[1].aabb().intersects(player.aabb()):
         # snap
         player.x = math.floor(player.x + 1) - 0.2
         if input[0] < 0:
